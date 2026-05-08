@@ -108,31 +108,47 @@ exports.sendWarnings = async (req, res) => {
 exports.getTodayAttendance = (req, res) => {
   const today = new Date().toISOString().split("T")[0];
 
-  // 🔥 First get current lab batch
-  const labSql = "SELECT batch FROM lab_info ORDER BY id DESC LIMIT 1";
+  // Get current selected lab batch
+  const labSql = `
+    SELECT batch 
+    FROM lab_info 
+    ORDER BY id DESC 
+    LIMIT 1
+  `;
 
   db.query(labSql, (err, labResult) => {
     if (err) return res.status(500).json(err);
 
     const batch = labResult[0]?.batch;
 
-    if (!batch) return res.json([]);
+    if (!batch) {
+      return res.json([]);
+    }
 
     const sql = `
-      SELECT s.enrollment_no, s.name, s.branch, s.class,
-      COALESCE(
-        (SELECT a.status
-         FROM attendance a
-         WHERE a.enrollment_no = s.enrollment_no AND a.date = ?
-         LIMIT 1),
-        'present'
-      ) AS status
+      SELECT 
+        s.enrollment_no,
+        s.name,
+        s.branch,
+        s.class,
+        s.year,s.sem,         
+        COALESCE(
+          (
+            SELECT a.status
+            FROM attendance a
+            WHERE a.enrollment_no = s.enrollment_no
+            AND a.date = ?
+            LIMIT 1
+          ),
+          'absent'
+        ) AS status
       FROM students s
       WHERE s.batch = ?
     `;
 
     db.query(sql, [today, batch], (err, result) => {
       if (err) return res.status(500).json(err);
+
       res.json(result);
     });
   });

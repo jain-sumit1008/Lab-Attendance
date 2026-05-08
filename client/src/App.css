@@ -162,3 +162,13 @@ td button {
   padding: 5px 10px;
   border-radius: 6px;
 }
+
+#jj{
+  display:flexbox; 
+  align-items: center;
+  background-color: #3c89e7;
+  height: 200px;
+  width: 200px;
+  margin-left: 500px;
+  border-radius: 20px;
+}
