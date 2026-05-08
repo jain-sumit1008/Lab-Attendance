@@ -18,3 +18,4 @@ exports.addStudent = (req, res) => {
         res.json({ message: "Student added" });
     });
 };
+

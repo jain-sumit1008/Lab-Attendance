@@ -2,7 +2,7 @@ export default function Header() {
   return (
     <div className="top-header">
       <div className="top-row">
-        <img className="logo" src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" />
+        <img className="logo" src="/svvvimages.png" alt="Logo" />
         <div className="title">
           <h2>Shri Vaishnav Vidyapeeth Vishwavidyalaya, Indore</h2>
           <p>Shri Vaishnav Institute of Information Technology</p>

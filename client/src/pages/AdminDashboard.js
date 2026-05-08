@@ -48,7 +48,7 @@ export default function AdminDashboard() {
               <th>Name</th>
               <th>Branch</th>
               <th>Class</th>
-              <th>Status</th>
+              <th>Sem/Year</th>
             </tr>
           </thead>
 
@@ -59,13 +59,7 @@ export default function AdminDashboard() {
                 <td>{s.name}</td>
                 <td>{s.branch}</td>
                 <td>{s.class}</td>
-                <td>
-                  {s.status === "present" ? (
-                    <span className="badge-good">Present</span>
-                  ) : (
-                    <span className="badge-low">Absent</span>
-                  )}
-                </td>
+                <td>{s.sem}/{s.year}</td>
               </tr>
             ))}
           </tbody>
