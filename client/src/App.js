@@ -53,7 +53,7 @@ function App() {
           <LabForm setLabInfo={setLabInfo} />
 
           <Routes>
-            <Route path="/" element={<AdminDashboard />} />
+            <Route path="/" element={<Login />} />
             <Route path="/attendance" element={<AttendancePage />} />
             <Route path="/report" element={<ReportPage />} />
             <Route path="/AdminDashboard" element={<AdminDashboard />} />
@@ -62,7 +62,7 @@ function App() {
 
         </div>
       </div>
-             
+
     </BrowserRouter>
   );
 }
