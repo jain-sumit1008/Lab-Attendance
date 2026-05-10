@@ -29,6 +29,7 @@ router.post(
 // ADMIN
 router.post(
    "/admin/register",
+   authMiddleware,
    registerAdmin
 );
 
