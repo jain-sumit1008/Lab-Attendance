@@ -1,9 +1,9 @@
 const express = require("express");
-const router = express.Router();   // ✅ THIS LINE WAS MISSING
+const router = express.Router();   
 const db = require("../config/db");
 
 // ✅ Get all students
-router.get("/", (req, res) => {
+router.get("/",authMiddleware, (req, res) => {
   db.query("SELECT * FROM students", (err, result) => {
     if (err) return res.status(500).json(err);
     res.json(result);
@@ -11,7 +11,7 @@ router.get("/", (req, res) => {
 });
 
 // ✅ Get students by batch
-router.get("/batch/:batch", (req, res) => {
+router.get("/batch/:batch",authMiddleware, (req, res) => {
   const { batch } = req.params;
 
   const sql = `

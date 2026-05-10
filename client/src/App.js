@@ -17,7 +17,7 @@ import API from "./services/api"; // for backend (optional)
 import "./App.css";
 
 function App() {
-
+const token = localStorage.getItem("token");
   // 🔹 1. STATE (IMPORTANT)
   const [labInfo, setLabInfo] = useState({
     lab: "NIL",
@@ -37,34 +37,64 @@ function App() {
   }, []);
 
   return (
-    <BrowserRouter>
 
-      <Header />
+   <BrowserRouter>
 
-      {/* 🔹 3. PASS DATA HERE */}
-      <InfoStrip labInfo={labInfo} />
+      {!token ? (
 
-      <div className="app-layout">
-        <Sidebar />
+         <Routes>
+            <Route path="*" element={<Login />} />
+         </Routes>
 
-        <div className="main">
+      ) : (
 
-          {/* 🔹 4. OPTIONAL FORM (only for admin) */}
-          <LabForm setLabInfo={setLabInfo} />
+         <>
+            <Header />
 
-          <Routes>
-            <Route path="/" element={<Login />} />
-            <Route path="/attendance" element={<AttendancePage />} />
-            <Route path="/report" element={<ReportPage />} />
-            <Route path="/AdminDashboard" element={<AdminDashboard />} />
-            <Route path="/student" element={<StudentDashboard />} />
-          </Routes>
+            <InfoStrip labInfo={labInfo} />
 
-        </div>
-      </div>
+            <div className="app-layout">
 
-    </BrowserRouter>
-  );
+               <Sidebar />
+
+               <div className="main">
+
+                  <LabForm setLabInfo={setLabInfo} />
+
+                  <Routes>
+
+                     <Route
+                        path="/attendance"
+                        element={<AttendancePage />}
+                     />
+
+                     <Route
+                        path="/report"
+                        element={<ReportPage />}
+                     />
+
+                     <Route
+                        path="/AdminDashboard"
+                        element={<AdminDashboard />}
+                     />
+
+                     <Route
+                        path="/student"
+                        element={<StudentDashboard />}
+                     />
+
+                  </Routes>
+
+               </div>
+
+            </div>
+         </>
+
+      )}
+
+   </BrowserRouter>
+);
+  
 }
 
 export default App;

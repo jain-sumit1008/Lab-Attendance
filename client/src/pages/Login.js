@@ -6,24 +6,75 @@ export default function Login() {
   const [data, setData] = useState({});
 
   const login = async () => {
-    try {
-      if (role === "student") {
-        const res = await API.post("/auth/student", data);
 
-        localStorage.setItem("student", JSON.stringify(res.data.student));
-        window.location.href = "/student";
+   try {
+
+      if(role === "student") {
+
+         const res = await API.post(
+            "/auth/student/login",
+            data
+         );
+
+         // STORE JWT
+         localStorage.setItem(
+            "token",
+            res.data.token
+         );
+
+         // STORE ROLE
+         localStorage.setItem(
+            "role",
+            res.data.role
+         );
+
+         // STORE USER DATA
+         localStorage.setItem(
+            "user",
+            JSON.stringify(res.data.student)
+         );
+
+         // REDIRECT
+         window.location.href = "/student";
 
       } else {
-        const res = await API.post("/auth/admin", data);
 
-        localStorage.setItem("admin", JSON.stringify(res.data.admin));
-        window.location.href = "/";
+         const res = await API.post(
+            "/auth/admin/login",
+            data
+         );
+
+         // STORE JWT
+         localStorage.setItem(
+            "token",
+            res.data.token
+         );
+
+         // STORE ROLE
+         localStorage.setItem(
+            "role",
+            res.data.role
+         );
+
+         // STORE USER DATA
+         localStorage.setItem(
+            "user",
+            JSON.stringify(res.data.admin)
+         );
+
+         // REDIRECT
+         window.location.href =
+            "/AdminDashboard";
       }
 
-    } catch {
+   } catch(err) {
+
+      console.log(err);
+
       alert("Invalid login ❌");
-    }
-  };
+
+   }
+};
 
   return (
     <div style={{ padding: 50 }} id="jj">

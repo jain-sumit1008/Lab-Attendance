@@ -3,7 +3,7 @@ const router = express.Router();
 const db = require("../config/db");
 
 // GET latest lab info
-router.get("/", (req, res) => {
+router.get("/",authMiddleware, (req, res) => {
   db.query(
     "SELECT * FROM lab_info ORDER BY id DESC LIMIT 1",
     (err, result) => {
@@ -19,7 +19,7 @@ router.get("/", (req, res) => {
 });
 
 // POST lab info
-router.post("/", (req, res) => {
+router.post("/", authMiddleware,(req, res) => {
   const { lab, course, batch, date, time } = req.body;
 
   const sql = `
