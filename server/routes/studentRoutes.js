@@ -11,15 +11,15 @@ router.get("/",authMiddleware, (req, res) => {
 });
 
 // ✅ Get students by batch
-router.get("/batch/:batch",authMiddleware, (req, res) => {
-  const { batch } = req.params;
+router.get("/batch/:branch",authMiddleware, (req, res) => {
+  const { branch } = req.params;
 
   const sql = `
     SELECT * FROM students
-    WHERE batch = ?
+    WHERE branch = ?
   `;
 
-  db.query(sql, [batch], (err, result) => {
+  db.query(sql, [branch], (err, result) => {
     if (err) return res.status(500).json(err);
     res.json(result);
   });

@@ -12,9 +12,9 @@ const {
 
 router.post("/mark",authMiddleware,adminMiddleware, markAttendance);
 router.get("/date/:date",authMiddleware,adminMiddleware,  getByDate);
-router.get("/report",authMiddleware,adminMiddleware,  getReport);
+router.get("/report",authMiddleware,  getReport);
 router.post("/send-warning", authMiddleware,adminMiddleware, sendWarnings);
-router.get("/today",authMiddleware,adminMiddleware,  getTodayAttendance);
+router.get("/today",authMiddleware,  getTodayAttendance);
 
 
 module.exports = router;

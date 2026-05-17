@@ -15,7 +15,7 @@ export default function Sidebar() {
     <div className="sidebar">
       <center>
         <img className="avatar" src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" />
-        <h3>Prof. Sharma</h3>
+        <h3>{}</h3>
       </center>
 
       <Link to="/" className="nav-btn">Dashboard</Link>

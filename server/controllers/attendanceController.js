@@ -48,28 +48,76 @@ exports.getByDate = (req, res) => {
 
 // Report with percentage
 exports.getReport = (req, res) => {
-    const sql = `
-        SELECT s.enrollment_no, s.name, s.email,
-        COUNT(a.id) as total_classes,
-        SUM(CASE WHEN a.status = 'present' THEN 1 ELSE 0 END) as present_days,
-        CASE 
-            WHEN COUNT(a.id) = 0 THEN 0
-            ELSE (SUM(CASE WHEN a.status = 'present' THEN 1 ELSE 0 END) / COUNT(a.id)) * 100
-        END as percentage
-        FROM students s
-        LEFT JOIN attendance a 
-        ON s.enrollment_no = a.enrollment_no
-        WHERE s.batch = (
-            SELECT batch FROM lab_info ORDER BY id DESC LIMIT 1
-        )
-        GROUP BY s.enrollment_no
-    `;
 
-    db.query(sql, (err, result) => {
-        if (err) return res.status(500).json(err);
-        res.json(result);
-    });
-};;
+   const sql = `
+
+      SELECT
+
+         s.enrollment_no,
+         s.name,
+         s.email,
+
+         COUNT(a.id) as total_classes,
+
+         SUM(
+            CASE
+               WHEN a.status = 'present'
+               THEN 1
+               ELSE 0
+            END
+         ) as present_days,
+
+         CASE
+
+            WHEN COUNT(a.id) = 0
+            THEN 0
+
+            ELSE (
+
+               SUM(
+                  CASE
+                     WHEN a.status = 'present'
+                     THEN 1
+                     ELSE 0
+                  END
+               ) / COUNT(a.id)
+
+            ) * 100
+
+         END as percentage
+
+      FROM students s
+
+      LEFT JOIN attendance a
+      ON s.enrollment_no = a.enrollment_no
+
+      WHERE s.branch = (
+
+         SELECT batch
+         FROM lab_info
+         ORDER BY id DESC
+         LIMIT 1
+
+      )
+
+      GROUP BY s.enrollment_no
+
+   `;
+
+   db.query(sql, (err, result) => {
+
+      if(err) {
+
+         console.log(err);
+
+         return res.status(500).json(err);
+
+      }
+
+      res.json(result);
+
+   });
+};
 
 // Send warning emails
 exports.sendWarnings = async (req, res) => {
