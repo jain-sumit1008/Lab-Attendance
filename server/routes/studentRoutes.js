@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();   
 const db = require("../config/db");
-
+const authMiddleware = require("../middleware/authMiddleware");
 // ✅ Get all students
 router.get("/",authMiddleware, (req, res) => {
   db.query("SELECT * FROM students", (err, result) => {
