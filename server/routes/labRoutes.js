@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const db = require("../config/db");
-
+const authMiddleware = require("../middleware/authMiddleware");
 // GET latest lab info
 router.get("/",authMiddleware, (req, res) => {
   db.query(
