@@ -120,6 +120,7 @@ export default function Login() {
       <br /><br />
 
       <button onClick={login}>Login</button>
+      <a href="/register" style={{ marginLeft: 20 }}>register</a>
     </div>
   );
 }

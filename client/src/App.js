@@ -5,7 +5,7 @@ import Header from "./components/Header";
 import InfoStrip from "./components/InfoStrip";
 import Sidebar from "./components/Sidebar";
 import LabForm from "./components/LabForm"; // NEW
-
+import Register from "./pages/register";
 import AdminDashboard from "./pages/AdminDashboard";
 import AttendancePage from "./pages/AttendancePage";
 import ReportPage from "./pages/ReportPage";
@@ -42,10 +42,24 @@ const token = localStorage.getItem("token");
 
       {!token ? (
 
-         <Routes>
-            <Route path="*" element={<Login />} />
-         </Routes>
+          <Routes>
 
+      <Route
+         path="/"
+         element={<Login />}
+      />
+
+      <Route
+         path="/register"
+         element={<Register />}
+      />
+
+      <Route
+         path="*"
+         element={<Login />}
+      />
+
+   </Routes>
       ) : (
 
          <>
