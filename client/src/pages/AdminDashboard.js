@@ -1,25 +1,46 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import API from "../services/api";
 
 export default function AdminDashboard() {
   const [students, setStudents] = useState([]);
+  const [selectedLab, setSelectedLab] = useState("all");
+  const [labs, setLabs] = useState([]);
+
+  const fetchLabs = async () => {
+    try {
+      const res = await API.get("/labs");
+      setLabs(res.data);
+    } catch (err) {
+      console.log("Failed to fetch labs:", err);
+    }
+  };
+
+  const fetchData = useCallback(async () => {
+    try {
+      const url = selectedLab === "all" 
+        ? "/attendance/today" 
+        : `/attendance/today?lab=${selectedLab}`;
+      const res = await API.get(url);
+      setStudents(res.data);
+    } catch (err) {
+      console.log("Failed to fetch attendance:", err);
+    }
+  }, [selectedLab]);
 
   useEffect(() => {
-    fetchData();
+    fetchLabs();
   }, []);
 
   useEffect(() => {
-  const admin = localStorage.getItem("admin");
+    fetchData();
+  }, [fetchData]);
 
-  if (!admin) {
-    window.location.href = "/login";
-  }
-}, []);
-
-  const fetchData = async () => {
-    const res = await API.get("/attendance/today");
-    setStudents(res.data);
-  };
+  useEffect(() => {
+    const role = localStorage.getItem("role");
+    if (role !== "admin") {
+      window.location.href = "/student";
+    }
+  }, []);
 
   // 📊 Calculations
   const total = students.length;
@@ -29,6 +50,29 @@ export default function AdminDashboard() {
   return (
     <div>
       <h2>Dashboard</h2>
+
+      {/* 🔹 Lab Selection Card */}
+      <div className="card" style={{ marginBottom: "20px" }}>
+        <h3>Select Lab</h3>
+        <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
+          <select 
+            value={selectedLab}
+            onChange={(e) => setSelectedLab(e.target.value)}
+            className="form-select"
+            style={{ maxWidth: "250px" }}
+          >
+            <option value="all">All Labs</option>
+            {labs.map((lab) => (
+              <option key={lab._id} value={lab._id}>
+                {lab.lab} - {lab.course}
+              </option>
+            ))}
+          </select>
+          <span style={{ color: "#5f6d86", fontSize: "14px" }}>
+            Showing: <strong>{selectedLab === "all" ? "All Labs" : labs.find(l => l._id === selectedLab)?.lab || "Loading..."}</strong>
+          </span>
+        </div>
+      </div>
 
       {/* 🔹 Cards */}
       <div className="card-row">
@@ -69,10 +113,3 @@ export default function AdminDashboard() {
     </div>
   );
 }
-
-<button onClick={() => {
-  localStorage.clear();
-  window.location.href = "/login";
-}}>
-  Logout
-</button>

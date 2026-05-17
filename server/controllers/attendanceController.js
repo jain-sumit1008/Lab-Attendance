@@ -179,7 +179,6 @@ exports.getTodayAttendance = (req, res) => {
         s.name,
         s.branch,
         s.class,
-        s.year,s.sem,         
         COALESCE(
           (
             SELECT a.status
@@ -191,7 +190,7 @@ exports.getTodayAttendance = (req, res) => {
           'absent'
         ) AS status
       FROM students s
-      WHERE s.batch = ?
+      WHERE s.branch = ?
     `;
 
     db.query(sql, [today, batch], (err, result) => {

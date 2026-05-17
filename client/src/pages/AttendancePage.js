@@ -1,14 +1,12 @@
 import { useEffect, useState } from "react";
 
 import API from "../services/api";
+import LabForm from "../components/LabForm";
 
-export default function AttendancePage() {
+export default function AttendancePage({ labInfo, setLabInfo }) {
 
    const [students, setStudents] =
       useState([]);
-
-   const [labInfo, setLabInfo] =
-      useState(null);
 
    const [loading, setLoading] =
       useState(true);
@@ -19,10 +17,12 @@ export default function AttendancePage() {
 
       const token =
          localStorage.getItem("token");
+      const role =
+         localStorage.getItem("role");
 
-      if(!token) {
+      if(!token || role !== "admin") {
 
-         window.location.href = "/";
+         window.location.href = "/student";
 
       }
 
@@ -31,10 +31,14 @@ export default function AttendancePage() {
 
    // LOAD DATA
    useEffect(() => {
+      if (labInfo && labInfo.batch) {
+         loadStudents(labInfo.batch);
+         setLoading(false);
+         return;
+      }
 
       loadLab();
-
-   }, []);
+   }, [labInfo]);
 
 
    // LOAD LAB INFO
@@ -175,6 +179,8 @@ export default function AttendancePage() {
    return (
 
       <div>
+
+         <LabForm setLabInfo={setLabInfo} />
 
          <h2>Attendance</h2>
 

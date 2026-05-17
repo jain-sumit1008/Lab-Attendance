@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import Header from "./components/Header";
 import InfoStrip from "./components/InfoStrip";
 import Sidebar from "./components/Sidebar";
-import LabForm from "./components/LabForm"; // NEW
 import Register from "./pages/register";
 import AdminDashboard from "./pages/AdminDashboard";
 import AttendancePage from "./pages/AttendancePage";
@@ -72,14 +71,15 @@ const token = localStorage.getItem("token");
                <Sidebar />
 
                <div className="main">
-
-                  <LabForm setLabInfo={setLabInfo} />
-
                   <Routes>
-
                      <Route
                         path="/attendance"
-                        element={<AttendancePage />}
+                        element={
+                           <AttendancePage
+                              labInfo={labInfo}
+                              setLabInfo={setLabInfo}
+                           />
+                        }
                      />
 
                      <Route

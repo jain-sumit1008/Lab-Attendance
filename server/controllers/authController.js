@@ -134,6 +134,7 @@ exports.studentLogin = (req, res) => {
 
          res.json({
             token,
+            role: "student",
             student
          });
 
@@ -253,6 +254,7 @@ exports.adminLogin = (req, res) => {
 
          res.json({
             token,
+            role: "admin",
             admin
          });
 

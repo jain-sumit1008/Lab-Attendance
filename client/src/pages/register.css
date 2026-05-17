@@ -3,52 +3,56 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background: #f2f5fb;
-  padding: 20px;
+  background: linear-gradient(180deg, #e8efff 0%, #f7fbff 100%);
+  padding: 24px;
 }
 
 .form-card {
-  width: min(440px, 100%);
+  width: min(500px, 100%);
   background: #ffffff;
-  padding: 32px;
-  border-radius: 20px;
-  box-shadow: 0 24px 80px rgba(40, 70, 120, 0.08);
+  padding: 36px;
+  border-radius: 28px;
+  box-shadow: 0 24px 90px rgba(40, 70, 120, 0.08);
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 22px;
 }
 
 .form-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 16px;
+  gap: 18px;
 }
 
 .form-header h2 {
   margin: 0;
-  font-size: 28px;
+  font-size: 30px;
+  letter-spacing: -0.03em;
 }
 
 .form-header p {
   margin: 4px 0 0;
-  color: #606f8c;
-  font-size: 14px;
+  color: #5e6d86;
+  font-size: 15px;
+  max-width: 320px;
 }
 
 .role-tag {
-  padding: 8px 14px;
+  padding: 10px 16px;
   border-radius: 999px;
-  background: #e5edff;
-  color: #1e4bff;
+  background: #e6efff;
+  color: #1f4eb6;
   font-weight: 700;
   font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
 }
 
 .form-group {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
 }
 
 .form-row {
@@ -65,20 +69,20 @@
 .form-card label {
   font-size: 14px;
   color: #3b4b67;
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .form-input,
 .form-select {
   width: 100%;
-  min-height: 46px;
-  padding: 12px 14px;
-  border: 1px solid #d4d9e4;
-  border-radius: 12px;
-  background: #f8fafc;
-  font-size: 14px;
+  min-height: 48px;
+  padding: 14px 16px;
+  border: 1px solid #dce3eb;
+  border-radius: 16px;
+  background: #fbfdff;
+  font-size: 15px;
   color: #172a45;
-  transition: border-color 0.2s ease, background-color 0.2s ease;
+  transition: border-color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .form-input:focus,
@@ -86,12 +90,13 @@
   outline: none;
   border-color: #4f7bff;
   background: #ffffff;
+  box-shadow: 0 0 0 4px rgba(77, 123, 255, 0.08);
 }
 
 .form-btn {
   width: 100%;
-  padding: 14px 16px;
-  border-radius: 14px;
+  padding: 16px 18px;
+  border-radius: 16px;
   border: none;
   background: linear-gradient(135deg, #2d6cdf 0%, #1f4db5 100%);
   color: #ffffff;
@@ -119,7 +124,11 @@
   font-weight: 700;
 }
 
-@media (max-width: 500px) {
+.form-footer a:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 640px) {
   .form-card {
     padding: 24px;
   }
@@ -128,3 +137,4 @@
     grid-template-columns: 1fr;
   }
 }
+
