@@ -153,50 +153,176 @@ exports.sendWarnings = async (req, res) => {
 };
 
 // Get today's attendance for dashboard
-exports.getTodayAttendance = (req, res) => {
-  const today = new Date().toISOString().split("T")[0];
+exports.getTodayAttendance = (
+   req,
+   res
+) => {
 
-  // Get current selected lab batch
-  const labSql = `
-    SELECT batch 
-    FROM lab_info 
-    ORDER BY id DESC 
-    LIMIT 1
-  `;
+   const today =
+      new Date()
+      .toISOString()
+      .split("T")[0];
 
-  db.query(labSql, (err, labResult) => {
-    if (err) return res.status(500).json(err);
+   const selectedLab =
+      req.query.lab;
 
-    const batch = labResult[0]?.batch;
 
-    if (!batch) {
-      return res.json([]);
-    }
+   // =========================
+   // SHOW ALL LABS
+   // =========================
+   if(
+      !selectedLab ||
+      selectedLab === "all"
+   ) {
 
-    const sql = `
-      SELECT 
-        s.enrollment_no,
-        s.name,
-        s.branch,
-        s.class,
-        COALESCE(
-          (
-            SELECT a.status
-            FROM attendance a
-            WHERE a.enrollment_no = s.enrollment_no
-            AND a.date = ?
-            LIMIT 1
-          ),
-          'absent'
-        ) AS status
-      FROM students s
-      WHERE s.branch = ?
-    `;
+      const sql = `
 
-    db.query(sql, [today, batch], (err, result) => {
-      if (err) return res.status(500).json(err);
+         SELECT
 
-      res.json(result);
-    });
-  });
+            s.enrollment_no,
+            s.name,
+            s.branch,
+            s.class,
+
+            COALESCE(
+
+               (
+                  SELECT a.status
+                  FROM attendance a
+
+                  WHERE
+                     a.enrollment_no =
+                     s.enrollment_no
+
+                  AND a.date = ?
+
+                  LIMIT 1
+               ),
+
+               'absent'
+
+            ) AS status
+
+         FROM students s
+
+      `;
+
+      db.query(
+         sql,
+         [today],
+         (err, result) => {
+
+            if(err) {
+
+               console.log(err);
+
+               return res
+                  .status(500)
+                  .json(err);
+
+            }
+
+            res.json(result);
+
+         }
+      );
+
+      return;
+   }
+
+
+   // =========================
+   // GET SELECTED LAB
+   // =========================
+
+   const labSql = `
+
+      SELECT batch
+      FROM lab_info
+      WHERE id = ?
+
+   `;
+
+   db.query(
+      labSql,
+      [selectedLab],
+      (err, labResult) => {
+
+         if(err) {
+
+            console.log(err);
+
+            return res
+               .status(500)
+               .json(err);
+
+         }
+
+         if(labResult.length === 0) {
+            return res.json([]);
+         }
+
+         const batch =
+            labResult[0].batch;
+
+
+         // =========================
+         // FILTER STUDENTS
+         // =========================
+
+         const sql = `
+
+            SELECT
+
+               s.enrollment_no,
+               s.name,
+               s.branch,
+               s.class,
+
+               COALESCE(
+
+                  (
+                     SELECT a.status
+                     FROM attendance a
+
+                     WHERE
+                        a.enrollment_no =
+                        s.enrollment_no
+
+                     AND a.date = ?
+
+                     LIMIT 1
+                  ),
+
+                  'absent'
+
+               ) AS status
+
+            FROM students s
+
+            WHERE s.branch = ?
+
+         `;
+
+         db.query(
+            sql,
+            [today, batch],
+            (err, result) => {
+
+               if(err) {
+
+                  console.log(err);
+
+                  return res
+                     .status(500)
+                     .json(err);
+
+               }
+
+               res.json(result);
+
+            }
+         );
+      }
+   );
 };
