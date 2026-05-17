@@ -1,126 +1,88 @@
 import { useState } from "react";
 import API from "../services/api";
+import "./register.css";
 
 export default function Login() {
   const [role, setRole] = useState("student");
   const [data, setData] = useState({});
 
   const login = async () => {
-
-   try {
-
-      if(role === "student") {
-
-         const res = await API.post(
-            "/auth/student/login",
-            data
-         );
-
-         // STORE JWT
-         localStorage.setItem(
-            "token",
-            res.data.token
-         );
-
-         // STORE ROLE
-         localStorage.setItem(
-            "role",
-            res.data.role
-         );
-
-         // STORE USER DATA
-         localStorage.setItem(
-            "user",
-            JSON.stringify(res.data.student)
-         );
-
-         // REDIRECT
-         window.location.href = "/student";
-
+    try {
+      if (role === "student") {
+        const res = await API.post("/auth/student/login", data);
+        localStorage.setItem("token", res.data.token);
+        localStorage.setItem("role", res.data.role);
+        localStorage.setItem("user", JSON.stringify(res.data.student));
+        window.location.href = "/student";
       } else {
-
-         const res = await API.post(
-            "/auth/admin/login",
-            data
-         );
-
-         // STORE JWT
-         localStorage.setItem(
-            "token",
-            res.data.token
-         );
-
-         // STORE ROLE
-         localStorage.setItem(
-            "role",
-            res.data.role
-         );
-
-         // STORE USER DATA
-         localStorage.setItem(
-            "user",
-            JSON.stringify(res.data.admin)
-         );
-
-         // REDIRECT
-         window.location.href =
-            "/AdminDashboard";
+        const res = await API.post("/auth/admin/login", data);
+        localStorage.setItem("token", res.data.token);
+        localStorage.setItem("role", res.data.role);
+        localStorage.setItem("user", JSON.stringify(res.data.admin));
+        window.location.href = "/AdminDashboard";
       }
-
-   } catch(err) {
-
+    } catch (err) {
       console.log(err);
-
       alert("Invalid login ❌");
-
-   }
-};
+    }
+  };
 
   return (
-    <div style={{ padding: 50 }} id="jj">
-      <h2>Login</h2>
+    <div className="form-container">
+      <div className="form-card">
+        <div className="form-header">
+          <div>
+            <h2>Login</h2>
+            <p>Access your student or faculty dashboard</p>
+          </div>
+          <span className="role-tag">{role === "student" ? "Student" : "Faculty"}</span>
+        </div>
 
-      {/* ✅ ROLE SELECT */}
-      <select onChange={e => setRole(e.target.value)}>
-        <option value="student">Student</option>
-        <option value="admin">Faculty</option>
-      </select>
+        <div className="form-group">
+          <label htmlFor="role">Role</label>
+          <select
+            id="role"
+            className="form-select"
+            value={role}
+            onChange={(e) => setRole(e.target.value)}
+          >
+            <option value="student">Student</option>
+            <option value="admin">Faculty</option>
+          </select>
+        </div>
 
-      <br /><br />
-
-      {/* ✅ INPUTS CHANGE BASED ON ROLE */}
-      {role === "student" ? (
-        <>
+        <div className="form-group">
+          <label>{role === "student" ? "Enrollment No" : "Username"}</label>
           <input
-            placeholder="Enrollment No"
-            onChange={e =>
-              setData({ ...data, enrollment_no: e.target.value })
+            className="form-input"
+            placeholder={role === "student" ? "Enrollment number" : "Username"}
+            onChange={(e) =>
+              setData({
+                ...data,
+                [role === "student" ? "enrollment_no" : "username"]: e.target.value,
+              })
             }
           />
-        </>
-      ) : (
-        <>
+        </div>
+
+        <div className="form-group">
+          <label>Password</label>
           <input
-            placeholder="Username"
-            onChange={e =>
-              setData({ ...data, username: e.target.value })
-            }
+            className="form-input"
+            type="password"
+            placeholder="Password"
+            onChange={(e) => setData({ ...data, password: e.target.value })}
           />
-        </>
-      )}
+        </div>
 
-      <input
-        type="password"
-        placeholder="Password"
-        onChange={e =>
-          setData({ ...data, password: e.target.value })
-        }
-      />
+        <button className="form-btn" onClick={login}>
+          Login
+        </button>
 
-      <br /><br />
-
-      <button onClick={login}>Login</button>
-      <a href="/register" style={{ marginLeft: 20 }}>register</a>
+        <p className="form-footer">
+          Don&apos;t have an account? <a href="/register">Register</a>
+        </p>
+      </div>
     </div>
   );
 }
