@@ -14,7 +14,7 @@ app.use("/api/students", require("./routes/studentRoutes"));
 app.use("/api/attendance", require("./routes/attendanceRoutes"));
 app.use("/api/auth", require("./routes/authRoutes"));
 app.use("/api/lab", require("./routes/labRoutes"));
-
+app.use("/api/attendance/date", require("./routes/attendanceRoutes"));   // 🔥 NEW ROUTE FOR DATE-BASED ATTENDANCE
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {

@@ -118,7 +118,122 @@ exports.getReport = (req, res) => {
 
    });
 };
+exports.getAttendanceByDate = (req, res) => {
 
+   const { date } = req.params;
+
+   const sql = `
+
+      SELECT
+
+         s.id,
+         s.enrollment_no,
+         s.name,
+         s.email,
+         s.branch,
+
+         a.date,
+         a.status
+
+      FROM students s
+
+      LEFT JOIN attendance a
+      ON s.enrollment_no = a.enrollment_no
+
+      WHERE DATE(a.date) = ?
+
+      AND s.branch = (
+
+         SELECT batch
+         FROM lab_info
+         ORDER BY id DESC
+         LIMIT 1
+
+      )
+
+      ORDER BY s.name ASC
+
+   `;
+
+   db.query(sql, [date], (err, result) => {
+
+      if (err) {
+
+         console.log(err);
+
+         return res.status(500).json({
+            success: false,
+            message: "Database Error",
+            error: err
+         });
+
+      }
+
+      res.status(200).json(result);
+
+   });
+
+};
+
+exports.getFilteredReport = (req, res) => {
+
+   const { date, lab, time } = req.query;
+
+   const sql = `
+
+      SELECT
+
+         s.enrollment_no,
+         s.name,
+         s.email,
+         s.branch,
+
+         a.status,
+
+         l.lab,
+         l.course,
+         l.batch,
+         l.date,
+         l.time
+
+      FROM students s
+
+      LEFT JOIN attendance a
+      ON s.enrollment_no = a.enrollment_no
+
+      LEFT JOIN lab_info l
+      ON s.branch = l.batch
+
+      WHERE DATE(l.date) = ?
+      AND l.lab = ?
+      AND l.time = ?
+
+      ORDER BY s.name ASC
+
+   `;
+
+   db.query(
+      sql,
+      [date, lab, time],
+      (err, result) => {
+
+         if (err) {
+
+            console.log(err);
+
+            return res.status(500).json({
+               success: false,
+               error: err.message
+            });
+
+         }
+
+         res.status(200).json(result);
+
+      }
+   );
+
+};
 // Send warning emails
 exports.sendWarnings = async (req, res) => {
     const sql = `
